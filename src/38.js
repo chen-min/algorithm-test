@@ -21,28 +21,48 @@ function* transverse(node) {
   }
 }
 
+// function* tree_transverse(tree, path = []){
+//   yield {tree, path}
+//   if(tree.children){
+//     for(let i=0; i<tree.children.length; i++){
+//       yield *tree_transverse(tree.children[i],[...path, i])
+//     }
+//   }
+// }
+
+
+
 function select(node, path){
   if(path.length === 0 ){return [node]}  
+  const p = path.shift()
+  if(p.child) {
+    return select(node.children[p.child], [...path])
+  } else if(p.op) {
+    return [...tree_transverse(node)]
+      .filter(_n => p.op(_n.node))
+      .map( n => n.node)
+  }
 }
+
 
 
 //解析选择表达式 1 [>5] ========> [{child:1}, {op: (x) => x.v>5}]
 function parse_selection_exp(expr){
-  console.log(expr.split(''))
-  return expr.split('').map( p => {
+  // console.log(expr.split(' '))
+  return expr.split(' ').map( p => {
     if(p.match(/^\d+$/)){
-      console.log('1111')
       return {child: parseInt(p)}
     } else {
-      console.log('222')
       return {
-        op : eval(`x => x.v ${p.replace(/\[\]/g, '')}`)
+        op : eval(`x => x.v ${p.replace(/[\[\]]/g, '')}`)
       }
     }
   })
 }
 
-// console.log(parse_selection_exp('1 [<5]'))
+function select_easy(tree, expr) {
+  return select(tree, parse_selection_exp(expr))
+}
 
-console.log('1 [<5]'.split(''))
-
+//select_easy(tree, '1 [>5]')
+// [Tree(7) Tree(11)]

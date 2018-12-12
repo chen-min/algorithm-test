@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+    <p>webpack test</p>
+    
+    <script type="text/javascript" ></script>
+    <script>
+
+function perm(A){
+  if(A.length === 1) {return [A]}
+  return [].concat(...A.map((a, i) => 
+    perm(A.slice(0, i).concat(A.slice(i+1))).map( p => 
+      [a].concat(p)
+    )
+  ))
+}
+
+console.log(perm(['a', 'b', 'c']))
+    </script>
+</body>
+</html>
+
